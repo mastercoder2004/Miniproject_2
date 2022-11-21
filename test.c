@@ -2,16 +2,80 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+struct employee
+{
+    int emplNum;
+    char firstName [25];
+    char lastName [25];
+    char title [25];
+    long salary;
+};
+void addWorker(struct employee *source, int *n)
+{
+    int emplNum;
+    char firstName [25];
+    char lastName [25];
+    char title [25];
+    long salary;
+    printf("enter employee number:\n");
+    scanf("%d",&emplNum);
+    printf("enter first name:\n");
+    scanf("%s",&firstName);
+    printf("enter last name:\n");
+    scanf("%s",&lastName);
+    printf("enter title:\n");
+    scanf("%s",&title);
+    printf("enter salary:\n");
+    scanf("%ld",&salary);
+    struct employee thisemployee;
+    thisemployee.emplNum = emplNum;
+    strcpy(thisemployee.firstName, firstName);
+    strcpy(thisemployee.lastName, lastName);
+    strcpy(thisemployee.title, title);
+    thisemployee.salary= salary;
+    source[*n]=thisemployee;
+    *n=*n+1;
+}
+struct employee workers[20];
 int main()
 {
-    FILE* textfile;  //creates a variable to call and manipulate the file
-    char character;
-    textfile=fopen("../../../Downloads/path_tester.txt", "r");    //opens the file to read when given the relative path
-    do
+    int check;
+    printf("Would you like to enter the data manually or from a file?\nEnter '1' for manual and '2' for from a file\n");
+    scanf("%d",&check);
+    if (check==1)
     {
-        character = fgetc(textfile); //gets a single character
-        printf("%c", character);
+        int num=0;
+        printf("currently %d employee(s)\n",num);
+        addWorker(workers,&num);
+        printf("now %d employee(s)\n", num);
+        addWorker(workers,&num);
+        printf("now %d employee(s)\n", num);
+        for (int i = 0; i < num; i++)
+        {
+            struct employee thisguy = workers[i];
+            printf("employee number; %d\n", thisguy.emplNum);
+            printf("employee name; %s, %s\n", thisguy.firstName, thisguy.lastName);
+            printf("employee title; %s\n", thisguy.title);
+            printf("employee salary; %ld\n", thisguy.salary);
+        }
+        
     }
-    while (character != EOF);
+    else if (check==2)
+    {
+        FILE* textfile;  //creates a variable to call and manipulate the file
+        char character;
+        textfile=fopen("../../../Downloads/path_tester.txt", "r");    //opens the file to read when given the relative path
+        do
+        {
+            character = fgetc(textfile); //gets a single character
+            printf("%c", character);
+        }
+        while (character != EOF);
+    }
+    else
+    {
+        printf("restart program");
+    }
+    
     return 0;
 }
