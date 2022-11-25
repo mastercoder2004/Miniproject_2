@@ -2,41 +2,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-struct employee
+struct position
 {
-    int emplNum;
-    char firstName [25];
-    char lastName [25];
-    char title [25];
-    long salary;
+    char name [25];
+    double time;
+    double latitude;
+    double longitude;
+    double altitude;
 };
-void addWorker(struct employee *source, int *n)
+void addposition(struct position *source, int *n)
 {
-    int emplNum;
-    char firstName [25];
-    char lastName [25];
-    char title [25];
-    long salary;
-    printf("enter employee number:\n");
-    scanf("%d",&emplNum);
-    printf("enter first name:\n");
-    scanf("%s",&firstName);
-    printf("enter last name:\n");
-    scanf("%s",&lastName);
-    printf("enter title:\n");
-    scanf("%s",&title);
-    printf("enter salary:\n");
-    scanf("%ld",&salary);
-    struct employee thisemployee;
-    thisemployee.emplNum = emplNum;
-    strcpy(thisemployee.firstName, firstName);
-    strcpy(thisemployee.lastName, lastName);
-    strcpy(thisemployee.title, title);
-    thisemployee.salary= salary;
-    source[*n]=thisemployee;
+    char name [25];
+    double time;
+    double latitude;
+    double longitude;
+    double altitude;
+    printf("enter person name:\n");
+    scanf("%s",&name);
+    printf("enter time:\n");
+    scanf("%lf",&time);
+    printf("enter latitude:\n");
+    scanf("%lf",&latitude);
+    printf("enter longitude:\n");
+    scanf("%lf",&longitude);
+    printf("enter altitude:\n");
+    scanf("%lf",&altitude);
+    struct position thisposition;
+    strcpy(thisposition.name, name);
+    thisposition.time = time;
+    thisposition.latitude = latitude;
+    thisposition.longitude = longitude;
+    thisposition.altitude = altitude;
+    source[*n]=thisposition;
     *n=*n+1;
 }
-struct employee workers[20];
+struct position people[20];
 int main()
 {
     int check;
@@ -44,19 +44,27 @@ int main()
     scanf("%d",&check);
     if (check==1)
     {
-        int num=0;
-        printf("currently %d employee(s)\n",num);
-        addWorker(workers,&num);
-        printf("now %d employee(s)\n", num);
-        addWorker(workers,&num);
-        printf("now %d employee(s)\n", num);
+        int num=0, others=0;
+        printf("please enter number of other users\n");
+        scanf("%d",&others);
+        others+=1;
+        printf("please enter your position\n");
+        addposition(people,&num);
+        printf("currently %d people added\n",num);
+        for (int i = 1; i < others; i++)
+        {
+            printf("enter other persons position please\n");
+            addposition(people,&num);
+            printf("now %d entry\n", num);
+        }
         for (int i = 0; i < num; i++)
         {
-            struct employee thisguy = workers[i];
-            printf("employee number; %d\n", thisguy.emplNum);
-            printf("employee name; %s, %s\n", thisguy.firstName, thisguy.lastName);
-            printf("employee title; %s\n", thisguy.title);
-            printf("employee salary; %ld\n", thisguy.salary);
+            struct position thisguy = people[i];
+            printf("person name; %s\n", thisguy.name);
+            printf("person time; %.2lf\n", thisguy.time);
+            printf("person latitude; %.2lf\n", thisguy.latitude);
+            printf("person longitude; %.2lf\n", thisguy.longitude);
+            printf("person altitude; %.2lf\n", thisguy.altitude);
         }
         
     }
@@ -64,13 +72,15 @@ int main()
     {
         FILE* textfile;  //creates a variable to call and manipulate the file
         char character;
-        textfile=fopen("../../../Downloads/path_tester.txt", "r");    //opens the file to read when given the relative path
+        printf("\n");
+        textfile=fopen("../../../Downloads/sample_users.txt", "r");    //opens the file to read when given the relative path
         do
         {
             character = fgetc(textfile); //gets a single character
             printf("%c", character);
         }
         while (character != EOF);
+        fclose(textfile);
     }
     else
     {
