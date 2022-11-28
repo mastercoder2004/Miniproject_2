@@ -62,6 +62,9 @@ int main()
     dist[0]=0;
     int check;
     int spot;
+    char path[500];
+    char filedata[500]=0;
+    int fileline=0;
     printf("Would you like to enter the data manually or from a file?\nEnter '1' for manual and '2' for from a file\n");
     scanf("%d",&check);
     if (check==1)
@@ -99,16 +102,20 @@ int main()
     }
     else if (check==2)
     {
+        printf("please enter file path\n");
+        scanf("%s", &path);
         FILE* textfile;  //creates a variable to call and manipulate the file
         char character;
+        char line[300];
         printf("\n");
-        textfile=fopen("../../../Downloads/sample_users.txt", "r");    //opens the file to read when given the relative path
-        do
+        textfile=fopen(path, "r");    //opens the file to read when given the relative path
+        while (fgets(line, sizeof(line), textfile))
         {
-            character = fgetc(textfile); //gets a single character
-            printf("%c", character);
+            char filedata[fileline]=fgets(line, sizeof(line), textfile);
+            printf("%s", line); 
+            fileline++;
         }
-        while (character != EOF);
+        
         fclose(textfile);
     }
     else
