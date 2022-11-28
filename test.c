@@ -140,7 +140,6 @@ int main()
         char character;
         printf("\n");
         textfile=fopen(path, "r");    //opens the file to read when given the relative path ../../../Downloads/sample_users.txt
-
         character = fgetc(textfile); //gets a single character
         while (character>47&&character<58)
         {
@@ -183,6 +182,5 @@ int main()
     {
         printf("restart program");
     }
-    
     return 0;
 }
