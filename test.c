@@ -55,6 +55,39 @@ void addposition(struct position *source, int *n, double *dist)
     dist[*n]=distance;
     *n=*n+1;
 }
+void autoposition(struct position *source, int *n, char *personname, double *time, double *lat, double *lon, double *alt, double *dist)
+{
+    double autotime=*time;
+    double autolatitude=*lat;
+    double autolongitude=*lon;
+    double autoaltitude=*alt;
+    double distance;
+    struct position autodistance;
+    struct position autooriginal;
+    struct position autothisposition;
+    strcpy(autothisposition.name, personname);
+    autothisposition.time = autotime;
+    autothisposition.latitude = autolatitude;
+    autothisposition.longitude = autolongitude;
+    autothisposition.altitude = autoaltitude;
+    source[*n]=autothisposition;
+    autodistance=source[*n];
+    autooriginal=source[0];
+    double dislat=autodistance.latitude;
+    double origlat=autooriginal.latitude;
+    dislat=(dislat-origlat);
+    dislat=pow((dislat),2);
+    double dislon=autodistance.longitude;
+    double origlon=autooriginal.longitude;
+    dislon=(dislon-origlon);
+    dislon=pow((dislon),2);
+    double disalt=autodistance.altitude;
+    double origalt=autooriginal.altitude;
+    disalt=(disalt-origalt);
+    disalt=pow((disalt),2);
+    distance=sqrt(dislat+dislon+disalt);
+    dist[*n]=distance;
+}
 struct position people[20];
 int main()
 {
@@ -63,8 +96,7 @@ int main()
     int check;
     int spot;
     char path[500];
-    char filedata[500]=0;
-    int fileline=0;
+    int usernum=0;
     printf("Would you like to enter the data manually or from a file?\nEnter '1' for manual and '2' for from a file\n");
     scanf("%d",&check);
     if (check==1)
@@ -106,17 +138,46 @@ int main()
         scanf("%s", &path);
         FILE* textfile;  //creates a variable to call and manipulate the file
         char character;
-        char line[300];
         printf("\n");
-        textfile=fopen(path, "r");    //opens the file to read when given the relative path
-        while (fgets(line, sizeof(line), textfile))
+        textfile=fopen(path, "r");    //opens the file to read when given the relative path ../../../Downloads/sample_users.txt
+
+        character = fgetc(textfile); //gets a single character
+        while (character>47&&character<58)
         {
-            char filedata[fileline]=fgets(line, sizeof(line), textfile);
-            printf("%s", line); 
-            fileline++;
+            usernum +=(character-'0');
+            character=fgetc(textfile);
+            usernum*=10;
         }
-        
+        usernum/=10;
+        char personname[200];
+        double time, lat, lon, alt;
+        for (int i = 0; i < (usernum+1); i++)
+        {
+            fscanf(textfile, "%s", personname);
+            fscanf(textfile, "%lf", &time);
+            fscanf(textfile, "%lf", &lat);
+            fscanf(textfile, "%lf", &lon);
+            fscanf(textfile, "%lf", &alt);
+            autoposition(people,&i,personname,&time,&lat,&lon,&alt,dist);
+        }
         fclose(textfile);
+        double temp=dist[1];
+        for (int i = 1; i < usernum; i++)
+        {
+            if (temp>dist[i])
+            {
+                temp=dist[i];
+            }
+        }
+        for (int i = 1; i < usernum; i++)
+        {
+            if (temp==dist[i])
+            {
+                spot=i;
+            }
+        }
+        struct position aclosest = people[spot];
+        printf("The closes person to the first entry is at latitude %.2lf, longitude %.2lf, altitude %.2lf and their name is %s at a distance of %.2lf.", aclosest.latitude, aclosest.longitude, aclosest.altitude, aclosest.name, temp);
     }
     else
     {
